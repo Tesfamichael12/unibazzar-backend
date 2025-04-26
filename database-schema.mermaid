@@ -1,0 +1,49 @@
+erDiagram
+    User ||--o| StudentProfile : "has one"
+    User ||--o| MerchantProfile : "has one"
+    User ||--o| TutorProfile : "has one"
+    User ||--o| CampusAdminProfile : "has one"
+    
+    User {
+        UUID id PK
+        string email
+        string full_name
+        is_email_verified
+        enum role
+        boolean is_active
+        datetime date_joined
+    }
+    
+    StudentProfile {
+        UUID id PK
+        UUID user_id FK
+        string university_id
+        string university_name
+    }
+    
+    MerchantProfile {
+        UUID id PK
+        UUID user_id FK
+        string store_name
+        string nearest_university
+        string phone_number
+        string tin_number
+        file business_docs
+    }
+    
+    TutorProfile {
+        UUID id PK
+        UUID user_id FK
+        string department
+        integer year
+        json subjects_scores
+        string teaching_levels
+        file edu_docs
+    }
+    
+    CampusAdminProfile {
+        UUID id PK
+        UUID user_id FK
+        string university
+        string admin_role
+    }
