@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UniBazzar API</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f5f7fa;
+        color: #333;
+      }
+      .container {
+        max-width: 800px;
+        padding: 40px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      h1 {
+        color: #1e3a8a;
+        margin-bottom: 20px;
+      }
+      p {
+        margin-bottom: 25px;
+        font-size: 18px;
+      }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+      .primary {
+        background-color: #1e3a8a;
+        color: white;
+      }
+      .primary:hover {
+        background-color: #152b67;
+      }
+      .secondary {
+        border: 2px solid #1e3a8a;
+        color: #1e3a8a;
+      }
+      .secondary:hover {
+        background-color: #1e3a8a;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to UniBazzar API</h1>
+      <p>
+        This is the UniBazzar API server. Use the links below to access our API
+        documentation and endpoints.
+      </p>
+      <div class="buttons">
+        <a href="/api/docs/" class="button primary">API Documentation</a>
+        <a href="/api/users/register/" class="button secondary"
+          >Registration API</a
+        >
+        <a href="/api/users/login/" class="button secondary">Login API</a>
+        <a href="/admin/" class="button secondary">Admin Panel</a>
+      </div>
+    </div>
+  </body>
+</html>

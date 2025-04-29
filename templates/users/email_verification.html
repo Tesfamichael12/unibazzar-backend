@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+    <title>Verify Your Email</title>
+    <style>
+      body {
+        font-family: "Poppins", "Inter", "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: #2c2e2f;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f7fa;
+      }
+      .container {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 30px;
+        background-color: #ffffff;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+      }
+      .logo {
+        max-width: 150px;
+        margin-bottom: 15px;
+      }
+      h2 {
+        color: #1e3a8a;
+        margin: 0;
+        font-size: 24px;
+      }
+      .button {
+        display: inline-block;
+        background-color: #1e3a8a;
+        color: white;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 50px;
+        margin: 20px 0;
+        font-weight: bold;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+      .button:hover {
+        background-color: #152b67;
+      }
+      .verification-link {
+        background-color: #f0f7ff;
+        border: 1px solid #d1e6ff;
+        border-radius: 5px;
+        padding: 12px;
+        word-break: break-all;
+        font-size: 14px;
+        color: #0c53b7;
+        margin: 15px 0;
+      }
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
+        color: #71717a;
+        text-align: center;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+      p {
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h2>Welcome to UniBazzar!</h2>
+      </div>
+
+      <p>Hello {{ user.full_name }},</p>
+
+      <p>
+        Thank you for registering with UniBazzar. To complete your registration
+        and activate your account, please verify your email address.
+      </p>
+
+      <div style="text-align: center">
+        <a href="{{ verification_link }}" class="button"
+          >Verify Email Address</a
+        >
+      </div>
+
+      <p>
+        If the button doesn't work, you can copy and paste the following link
+        into your browser:
+      </p>
+
+      <div class="verification-link">{{ verification_link }}</div>
+
+      <p>This link will expire in 24 hours for security reasons.</p>
+
+      <p>
+        If you did not create an account on UniBazzar, please ignore this email.
+      </p>
+
+      <p>Best regards,<br /><strong>The UniBazzar Team</strong></p>
+
+      <div class="footer">
+        <p>&copy; {{ site_name }} {% now "Y" %}. All rights reserved.</p>
+        <p>This is an automated email, please do not reply.</p>
+      </div>
+    </div>
+  </body>
+</html>
