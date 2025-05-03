@@ -75,3 +75,6 @@ Pipfile.lock
 *.log
 *.bak
 *.tmp
+
+# util scripts 
+delete_all_users.py

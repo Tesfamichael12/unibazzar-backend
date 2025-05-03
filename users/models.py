@@ -133,3 +133,41 @@ class User(AbstractUser):
     
     def get_short_name(self):
         return self.full_name.split()[0] if self.full_name else self.email
+
+class StudentProfile(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='student_profile')
+    university_id = models.CharField(max_length=100)
+    university_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.university_name}"
+
+class MerchantProfile(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='merchant_profile')
+    store_name = models.CharField(max_length=255)
+    nearest_university = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20)
+    tin_number = models.CharField(max_length=50)
+    business_docs = models.FileField(upload_to='business_docs/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.store_name}"
+
+class TutorProfile(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='tutor_profile')
+    department = models.CharField(max_length=255)
+    year = models.IntegerField()
+    subjects_scores = models.JSONField(default=dict, blank=True)
+    teaching_levels = models.CharField(max_length=255)
+    edu_docs = models.FileField(upload_to='edu_docs/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.department}"
+
+class CampusAdminProfile(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='campus_admin_profile')
+    university = models.CharField(max_length=255)
+    admin_role = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.university} ({self.admin_role})"

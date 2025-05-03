@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from .models import University
 from .utils import validate_password_strength
+from .models import StudentProfile, MerchantProfile, TutorProfile, CampusAdminProfile
 
 User = get_user_model()
 
@@ -163,3 +164,23 @@ class ResendVerificationEmailSerializer(serializers.Serializer):
         # if user.is_email_verified:
         #     raise serializers.ValidationError("This email is already verified.")
         return value
+
+class StudentProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentProfile
+        fields = '__all__'
+
+class MerchantProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MerchantProfile
+        fields = '__all__'
+
+class TutorProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TutorProfile
+        fields = '__all__'
+
+class CampusAdminProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CampusAdminProfile
+        fields = '__all__'

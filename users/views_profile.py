@@ -1,4 +1,4 @@
-from rest_framework import status, generics, permissions
+from rest_framework import status, generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -9,11 +9,17 @@ from drf_yasg import openapi
 
 from .serializers import (
     UserProfileSerializer, UserProfileUpdateSerializer, ProfilePictureSerializer,
-    EmailChangeSerializer, PhoneNumberUpdateSerializer, PasswordChangeSerializer
+    EmailChangeSerializer, PhoneNumberUpdateSerializer, PasswordChangeSerializer,
+    StudentProfileSerializer, MerchantProfileSerializer, TutorProfileSerializer, CampusAdminProfileSerializer
 )
 from .utils import send_verification_email
+from .models import StudentProfile, MerchantProfile, TutorProfile, CampusAdminProfile
 
 User = get_user_model()
+
+class IsOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserProfileSerializer
@@ -305,4 +311,44 @@ class PasswordChangeView(APIView):
                 'message': 'Password changed successfully'
             })
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class StudentProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = StudentProfileSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False) or not self.request.user.is_authenticated:
+            return StudentProfile.objects.none()
+        return StudentProfile.objects.filter(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class MerchantProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = MerchantProfileSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False) or not self.request.user.is_authenticated:
+            return MerchantProfile.objects.none()
+        return MerchantProfile.objects.filter(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class TutorProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = TutorProfileSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False) or not self.request.user.is_authenticated:
+            return TutorProfile.objects.none()
+        return TutorProfile.objects.filter(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class CampusAdminProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = CampusAdminProfileSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    def get_queryset(self):
+        if getattr(self, 'swagger_fake_view', False) or not self.request.user.is_authenticated:
+            return CampusAdminProfile.objects.none()
+        return CampusAdminProfile.objects.filter(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
