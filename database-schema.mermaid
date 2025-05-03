@@ -6,10 +6,12 @@ erDiagram
     
     User {
         UUID id PK
-        string email
         string full_name
-        is_email_verified
+        string email
+        string password
+        integer is_email_verified
         enum role
+        string profile_picture
         boolean is_active
         datetime date_joined
     }
