@@ -11,8 +11,8 @@ User = get_user_model()
 class AuthenticationTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.register_url = reverse('register')
-        self.login_url = reverse('token_obtain_pair')
+        self.register_url = reverse('users:register')
+        self.login_url = reverse('users:login')
         
         # Create a university
         self.university = University.objects.create(name="Addis Ababa University")
@@ -20,7 +20,6 @@ class AuthenticationTests(TestCase):
         # Create a verified user
         self.verified_user = User.objects.create_user(
             email='verified@example.com',
-            username='verified@example.com',
             password='Test@123',
             full_name='Verified User',
             role='student',
@@ -31,7 +30,6 @@ class AuthenticationTests(TestCase):
         # Create an unverified user
         self.unverified_user = User.objects.create_user(
             email='unverified@example.com',
-            username='unverified@example.com',
             password='Test@123',
             full_name='Unverified User',
             role='student',
@@ -84,7 +82,7 @@ class AuthenticationTests(TestCase):
 class UserProfileTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.profile_url = reverse('user_profile')
+        self.profile_url = reverse('users:user_profile')
         
         # Create a university
         self.university = University.objects.create(name="Addis Ababa University")
@@ -92,7 +90,6 @@ class UserProfileTests(TestCase):
         # Create a test user
         self.user = User.objects.create_user(
             email='test@example.com',
-            username='test@example.com',
             password='Test@123',
             full_name='Test User',
             role='student',
@@ -129,7 +126,7 @@ class UserProfileTests(TestCase):
     
     def test_update_phone_number(self):
         """Test updating phone number"""
-        url = reverse('update_phone')
+        url = reverse('users:update_phone')
         data = {
             'phone_number': '+251912345678'
         }
@@ -143,7 +140,7 @@ class UserProfileTests(TestCase):
     
     def test_change_password(self):
         """Test changing password"""
-        url = reverse('change_password')
+        url = reverse('users:change_password')
         data = {
             'current_password': 'Test@123',
             'new_password': 'NewTest@123',
@@ -160,7 +157,7 @@ class UserProfileTests(TestCase):
 class UniversityListTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.url = reverse('university-list') # Assuming you have a URL named 'university-list'
+        self.url = reverse('users:university-list') # Assuming you have a URL named 'university-list'
         University.objects.create(name="Test University 1")
         University.objects.create(name="Test University 2")
 
