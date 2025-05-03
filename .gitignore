@@ -32,6 +32,11 @@ db.sqlite3
 db.sqlite3-journal
 media/
 staticfiles/
+static/
+*.pot
+*.pyc
+*.pyo
+*.pyd
 
 # IDE
 .idea/
@@ -43,5 +48,33 @@ staticfiles/
 .DS_Store
 Thumbs.db 
 
-# Virtual environment
+# ignore the virtual environment 
 venv/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pytest
+.pytest_cache/
+
+# Pipenv
+Pipfile.lock
+
+# Other
+*.log
+*.bak
+*.tmp
+
+# util scripts 
+delete_all_users.py
