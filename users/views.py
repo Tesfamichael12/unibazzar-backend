@@ -87,50 +87,31 @@ class UserRegistrationView(generics.CreateAPIView):
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 try:
-                    # Create user with transaction to ensure atomicity
                     with transaction.atomic():
                         user = serializer.save()
-                    
                     # Send verification email outside transaction
-                    try:
-                        email_sent = send_verification_email(user, request)
-                        
-                        response_data = {
-                            'status': 'success',
-                            'message': 'User registered successfully.',
-                            'user_id': user.id,
-                            'email': user.email
-                        }
-                        
-                        if email_sent:
-                            response_data['email_verification'] = 'Verification email sent. Please check your inbox.'
-                        else:
-                            response_data['email_verification'] = 'Failed to send verification email. Please use the resend verification endpoint.'
-                        
-                        return Response(response_data, status=status.HTTP_201_CREATED)
-                    except Exception as e:
-                        # If email sending fails, still return success but with a note
-                        return Response({
-                            'status': 'success',
-                            'message': 'User registered successfully.',
-                            'user_id': user.id,
-                            'email': user.email,
-                            'email_verification': 'Email verification could not be sent. Please use the resend verification endpoint.'
-                        }, status=status.HTTP_201_CREATED)
+                    success, error_message = send_verification_email(user, request)
+                    response_data = {
+                        'status': 'success',
+                        'message': 'User registered successfully.',
+                        'user_id': user.id,
+                        'email': user.email
+                    }
+                    if success:
+                        response_data['email_verification'] = 'Verification email sent. Please check your inbox.'
+                    else:
+                        response_data['email_verification'] = f'Failed to send verification email: {error_message}'
+                    return Response(response_data, status=status.HTTP_201_CREATED)
                 except Exception as e:
-                    # Log the specific error
                     return Response({
                         'status': 'error',
-                        'message': 'An error occurred during registration. Please try again.'
+                        'message': f'An error occurred during registration: {str(e)}'
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
-            # If serializer is not valid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Catch-all for unexpected errors
             return Response({
                 'status': 'error',
-                'message': 'An unexpected error occurred. Please try again later.'
+                'message': f'An unexpected error occurred: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class EmailVerificationView(APIView):
@@ -386,19 +367,17 @@ class ResendVerificationEmailView(APIView):
                     'message': 'Email is already verified.'
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Send verification email
-            email_sent = send_verification_email(user, request)
+            success, error_message = send_verification_email(user, request)
 
-            if email_sent:
+            if success:
                 return Response({
                     'status': 'success',
                     'message': 'Verification email sent successfully.'
                 }, status=status.HTTP_200_OK)
             else:
-                 # Handle case where email sending failed internally
-                 return Response({
+                return Response({
                     'status': 'error',
-                    'message': 'Failed to send verification email. Please try again later.'
+                    'message': f'Failed to send verification email: {error_message}'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except User.DoesNotExist:
@@ -406,10 +385,10 @@ class ResendVerificationEmailView(APIView):
                 'status': 'error',
                 'message': 'User with this email does not exist.'
             }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e: # Catch potential errors during email sending
+        except Exception as e:
             return Response({
                 'status': 'error',
-                'message': 'An unexpected error occurred. Please try again.'
+                'message': f'An unexpected error occurred: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # --- University List View --- #
