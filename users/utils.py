@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 def send_verification_email(user, request):
     """
     Send email verification link to the user
+    Returns (True, None) on success, (False, error_message) on failure
     """
     try:
         # Get site info
@@ -103,8 +104,8 @@ def send_verification_email(user, request):
                     fallback_email.content_subtype = "html"
                     fallback_email.send(fail_silently=True)
                     
-                    return True  # Return True for development convenience
-                return False
+                    return True, None  # Return True for development convenience
+                return False, f"Network connection to {settings.EMAIL_HOST}:{settings.EMAIL_PORT} failed: {str(e)}"
             
             # Get connection with timeout
             connection = get_connection(
@@ -131,10 +132,10 @@ def send_verification_email(user, request):
             
             if result == 1:
                 logger.info(f"Email sent successfully to {user.email}")
-                return True
+                return True, None
             else:
                 logger.error(f"Failed to send email. Result: {result}")
-                return False
+                return False, f"Failed to send email. Result: {result}"
                 
         except Exception as e:
             logger.error(f"SMTP Error: {str(e)}")
@@ -160,13 +161,14 @@ def send_verification_email(user, request):
                     
                 except Exception as fallback_error:
                     logger.error(f"Fallback email error: {str(fallback_error)}")
+                    return False, f"Fallback email error: {str(fallback_error)}"
                 
-                return True  # Return True for development convenience
-            return False
+                return True, None  # Return True for development convenience
+            return False, f"SMTP Error: {str(e)}"
             
     except Exception as e:
         logger.error(f"Error sending verification email: {str(e)}")
-        return False
+        return False, f"Error sending verification email: {str(e)}"
 
 def get_unique_filename(instance, filename):
     """
