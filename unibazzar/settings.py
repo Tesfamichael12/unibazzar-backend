@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'users',
+    'products',
 ]
 
 MIDDLEWARE = [
@@ -152,13 +153,14 @@ SITE_ID = 1
 # REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
         # Use JWT Authentication
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         # Keep SessionAuthentication for browsable API/admin
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
