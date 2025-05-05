@@ -31,6 +31,8 @@ schema_view = get_schema_view(
         path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
         path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
         path('api/users/', include('users.urls')),
+
+        path('api/products/', include('products.urls')),
         path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
         path('accounts/', include('allauth.urls')),
         path('api/auth-drf/', include('rest_framework.urls', namespace='rest_framework'))
@@ -58,6 +60,9 @@ urlpatterns = [
     # User App Endpoints (Includes custom Login, Registration, Profile, etc.)
     path('api/users/', include('users.urls')),
 
+    # Products App Endpoints
+    path('api/products/', include('products.urls')),
+
     # Password Reset Endpoints (from django-rest-passwordreset)
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 
@@ -70,4 +75,4 @@ urlpatterns = [
 
 # Serve media files in development
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
