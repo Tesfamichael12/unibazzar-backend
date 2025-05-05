@@ -1,0 +1,158 @@
+# UniBazzar Products App API Documentation
+
+All endpoints are under the prefix: `/api/products/`
+All endpoints require authentication (JWT or DRF token).
+
+---
+
+## 1. Categories
+
+- **List all categories**
+  - `GET /api/products/categories/`
+  - Returns a list of all product/service categories.
+
+- **Create a new category**
+  - `POST /api/products/categories/`
+  - Body: `{ "name": "...", "slug": "...", "description": "..." }`
+
+- **Retrieve a category**
+  - `GET /api/products/categories/{id}/`
+
+- **Update a category**
+  - `PUT /api/products/categories/{id}/`
+  - `PATCH /api/products/categories/{id}/`
+
+- **Delete a category**
+  - `DELETE /api/products/categories/{id}/`
+
+---
+
+## 2. Merchant Products
+
+- **List merchant products (owned by current user)**
+  - `GET /api/products/merchant-products/`
+
+- **Create a merchant product**
+  - `POST /api/products/merchant-products/`
+  - Body:
+    {
+      "name": "...",
+      "photo": <file>,
+      "category_id": <category_id>,
+      "description": "...",
+      "tags": "...",
+      "price": "...",
+      "phone_number": "..."
+    }
+
+- **Retrieve a merchant product**
+  - `GET /api/products/merchant-products/{id}/`
+
+- **Update a merchant product**
+  - `PUT /api/products/merchant-products/{id}/`
+  - `PATCH /api/products/merchant-products/{id}/`
+
+- **Delete a merchant product**
+  - `DELETE /api/products/merchant-products/{id}/`
+
+---
+
+## 3. Student Products
+
+- **List student products (owned by current user)**
+  - `GET /api/products/student-products/`
+
+- **Create a student product**
+  - `POST /api/products/student-products/`
+  - Body:
+    {
+      "name": "...",
+      "category_id": <category_id>,
+      "condition": "used|slightly used|new",
+      "photo": <file>,
+      "description": "...",
+      "tags": "...",
+      "price": "...",
+      "phone_number": "..."
+    }
+
+- **Retrieve a student product**
+  - `GET /api/products/student-products/{id}/`
+
+- **Update a student product**
+  - `PUT /api/products/student-products/{id}/`
+  - `PATCH /api/products/student-products/{id}/`
+
+- **Delete a student product**
+  - `DELETE /api/products/student-products/{id}/`
+
+---
+
+## 4. Tutor Services
+
+- **List tutor services (owned by current user)**
+  - `GET /api/products/tutor-services/`
+
+- **Create a tutor service**
+  - `POST /api/products/tutor-services/`
+  - Body:
+    {
+      "banner_photo": <file>,
+      "category_id": <category_id>,
+      "description": "...",
+      "price": "...",
+      "phone_number": "..."
+    }
+
+- **Retrieve a tutor service**
+  - `GET /api/products/tutor-services/{id}/`
+
+- **Update a tutor service**
+  - `PUT /api/products/tutor-services/{id}/`
+  - `PATCH /api/products/tutor-services/{id}/`
+
+- **Delete a tutor service**
+  - `DELETE /api/products/tutor-services/{id}/`
+
+---
+
+## 5. Reviews
+
+- **List reviews (created by current user)**
+  - `GET /api/products/reviews/`
+
+- **Create a review**
+  - `POST /api/products/reviews/`
+  - Body:
+    {
+      "content_type": <content_type_id>,
+      "object_id": <product_or_service_id>,
+      "rating": 1-5,
+      "comment": "..."
+    }
+
+- **Retrieve a review**
+  - `GET /api/products/reviews/{id}/`
+
+- **Update a review**
+  - `PUT /api/products/reviews/{id}/`
+  - `PATCH /api/products/reviews/{id}/`
+
+- **Delete a review**
+  - `DELETE /api/products/reviews/{id}/`
+
+---
+
+## Notes for Frontend Integration
+
+- All product/service endpoints return and accept a `phone_number` field.
+- For product/service creation, use the `category_id` field to assign a category.
+- All endpoints require authentication (JWT or DRF token in the `Authorization` header).
+- File uploads (photo, banner_photo) should use multipart/form-data.
+- The `/api/products/categories/` endpoint can be used to fetch available categories for filtering or selection.
+
+---
+
+**Swagger/OpenAPI docs are available at:**
+`/api/docs/`
+for full schema and try-it-out functionality.
