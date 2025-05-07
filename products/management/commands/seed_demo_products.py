@@ -43,9 +43,11 @@ class Command(BaseCommand):
             "password": "demo1234"
         })
         categories = {c.name.lower(): c for c in Category.objects.all()}
-        product_images = get_image_paths("Product_image")
-        food_images = get_image_paths("food_image")
-        tutor_images = get_image_paths("image_tutor")
+        # Updated image folder names
+        merchant_product_images = get_image_paths("merchant_products")
+        product_images = get_image_paths("product_images")
+        student_product_images = get_image_paths("student_products")
+        tutor_service_images = get_image_paths("tutor_services")
         online_product_images = [
             "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
             "https://images.unsplash.com/photo-1519125323398-675f0ddb6308"
@@ -78,10 +80,27 @@ class Command(BaseCommand):
             )
             if photo:
                 photo.close()
+        # MerchantProduct (merchant products)
+        for i in range(10):
+            name = random.choice(PRODUCT_NAMES)
+            img_path = merchant_product_images[i % len(merchant_product_images)] if merchant_product_images else None
+            photo = File(open(img_path, "rb"), name=os.path.basename(img_path)) if img_path else None
+            MerchantProduct.objects.create(
+                owner=user,
+                name=f"Merchant {name} {i+1}",
+                photo=photo if photo else online_product_images[i % len(online_product_images)],
+                category=categories.get("products"),
+                description=f"Merchant {name} description.",
+                tags="merchant,product",
+                price=round(random.uniform(100, 2000), 2),
+                phone_number=get_random_phone()
+            )
+            if photo:
+                photo.close()
         # StudentProduct (educational materials)
         for i in range(25):
             name = random.choice(PRODUCT_NAMES)
-            img_path = product_images[i % len(product_images)] if product_images else None
+            img_path = student_product_images[i % len(student_product_images)] if student_product_images else None
             photo = File(open(img_path, "rb"), name=os.path.basename(img_path)) if img_path else None
             StudentProduct.objects.create(
                 owner=user,
@@ -116,7 +135,7 @@ class Command(BaseCommand):
         # TutorService (tutoring)
         for i in range(20):
             topic = random.choice(TUTOR_TOPICS)
-            img_path = tutor_images[i % len(tutor_images)] if tutor_images else None
+            img_path = tutor_service_images[i % len(tutor_service_images)] if tutor_service_images else None
             photo = File(open(img_path, "rb"), name=os.path.basename(img_path)) if img_path else None
             TutorService.objects.create(
                 owner=user,
@@ -131,7 +150,7 @@ class Command(BaseCommand):
         # MerchantProduct (services)
         for i in range(10):
             name = random.choice(SERVICE_NAMES)
-            img_path = product_images[i % len(product_images)] if product_images else None
+            img_path = merchant_product_images[i % len(merchant_product_images)] if merchant_product_images else None
             photo = File(open(img_path, "rb"), name=os.path.basename(img_path)) if img_path else None
             MerchantProduct.objects.create(
                 owner=user,
