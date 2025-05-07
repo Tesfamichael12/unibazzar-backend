@@ -23,7 +23,7 @@ class MerchantProductViewSet(viewsets.ModelViewSet):
         return []
 
     def get_queryset(self):
-        return MerchantProduct.objects.all()[:100]
+        return MerchantProduct.objects.all().order_by('id')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -38,7 +38,7 @@ class StudentProductViewSet(viewsets.ModelViewSet):
         return []
 
     def get_queryset(self):
-        return StudentProduct.objects.all()[:100]
+        return StudentProduct.objects.all().order_by('id')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -53,7 +53,7 @@ class TutorServiceViewSet(viewsets.ModelViewSet):
         return []
 
     def get_queryset(self):
-        return TutorService.objects.all()[:100]
+        return TutorService.objects.all().order_by('id')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -71,7 +71,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         serializer.save(reviewer=self.request.user)
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('id')
     serializer_class = CategorySerializer
     permission_classes = []  # Allow any user (authenticated or not)
 
