@@ -73,7 +73,7 @@ users/
 1. **Clone the repo**
 
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/Tesfamichael12/unibazzar-backend
    cd unibazzar-backend
    ```
 
