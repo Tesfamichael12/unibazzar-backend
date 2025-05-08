@@ -38,7 +38,12 @@ class StudentProductViewSet(viewsets.ModelViewSet):
         return []
 
     def get_queryset(self):
-        return StudentProduct.objects.all().order_by('id')
+        queryset = StudentProduct.objects.all().order_by('id')
+        category_id = self.request.query_params.get('category')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+        queryset = queryset.filter(id__gte=231)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -53,7 +58,12 @@ class TutorServiceViewSet(viewsets.ModelViewSet):
         return []
 
     def get_queryset(self):
-        return TutorService.objects.all().order_by('id')
+        queryset = TutorService.objects.all().order_by('id')
+        category_id = self.request.query_params.get('category')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+        queryset = queryset.filter(id__gte=210)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
