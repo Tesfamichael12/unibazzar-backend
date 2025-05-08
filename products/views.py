@@ -70,15 +70,36 @@ class TutorServiceViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []  # Allow any user to read reviews
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [permissions.IsAuthenticated()]
+        return []
 
     def get_queryset(self):
-        if getattr(self, 'swagger_fake_view', False) or not self.request.user.is_authenticated:
+        # Allow unauthenticated users to list/retrieve reviews
+        if getattr(self, 'swagger_fake_view', False):
             return Review.objects.none()
-        return Review.objects.filter(reviewer=self.request.user)
+        queryset = Review.objects.all()
+        content_type = self.request.query_params.get('content_type')
+        object_id = self.request.query_params.get('object_id')
+        if content_type and object_id:
+            queryset = queryset.filter(content_type_id=content_type, object_id=object_id)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(reviewer=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        # Treat pk as object_id (product id)
+        object_id = kwargs.get('pk')
+        content_type = request.query_params.get('content_type')
+        if not content_type:
+            return Response({'detail': 'content_type query parameter is required.'}, status=400)
+        reviews = Review.objects.filter(content_type_id=content_type, object_id=object_id)
+        serializer = self.get_serializer(reviews, many=True)
+        return Response(serializer.data)
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
