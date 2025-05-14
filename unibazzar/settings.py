@@ -108,7 +108,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-print("INFO: Forcing SQLite database configuration.") # Indicate SQLite is being used
 
 # If you plan to use Supabase or another Postgres DB, configure it here or via DATABASE_URL
 # The following block is INTENTIONALLY COMMENTED OUT to force SQLite usage for now,

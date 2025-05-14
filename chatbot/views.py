@@ -17,7 +17,6 @@ if settings.GEMINI_API_KEY:
         # Using gemini-1.5-flash-latest for a balance of speed and capability.
         GENERATIVE_MODEL = genai.GenerativeModel('gemini-1.5-flash-latest')
         GEMINI_MODEL_INITIALIZED = True
-        print("Gemini API configured and model initialized successfully.")
     except Exception as e:
         print(f"ERROR: Failed to configure Gemini API or initialize model: {e}")
 else:
@@ -58,6 +57,7 @@ UniBazzar is a comprehensive online marketplace and service hub designed specifi
 *   **Promote UniBazzar:** Encourage users to explore different sections of UniBazzar.
 *   **Problem Solving:** Offer general advice on how to resolve common issues or direct them to where they might find help (e.g., "For payment issues, please check our FAQ or contact support through the app.").
 *   **Maintain Context:** Keep your answers focused on UniBazzar. If a user asks a general question unrelated to UniBazzar or university life, politely provide a brief answer if appropriate, and then try to steer the conversation back to UniBazzar\'s services. For example: "The capital of France is Paris. Now, are you interested in finding any study materials for your French class on UniBazzar?"
+*   **Language Handling:** If the user asks a question in Amharic, please provide your response in Amharic. For other languages, respond in the language of the query if possible, or default to English.
 
 **Tone:**
 Be friendly, approachable, helpful, and professional. Use clear and concise language.
