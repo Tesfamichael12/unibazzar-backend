@@ -150,6 +150,9 @@ class MerchantProfile(models.Model):
     tin_number = models.CharField(max_length=50)
     business_docs = models.FileField(upload_to='business_docs/', blank=True, null=True)
 
+    class Meta:
+        ordering = ['pk']
+
     def __str__(self):
         return f"{self.user.full_name} - {self.store_name}"
 
