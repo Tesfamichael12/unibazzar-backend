@@ -129,7 +129,10 @@ class PasswordChangeSerializer(serializers.Serializer):
     current_password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=True, write_only=True)
     confirm_new_password = serializers.CharField(required=True, write_only=True)
-    
+
+    class Meta:
+        ref_name = 'UserPasswordChange'  # Unique ref_name for Swagger
+
     def validate(self, attrs):
         # Check if new passwords match
         if attrs['new_password'] != attrs['confirm_new_password']:

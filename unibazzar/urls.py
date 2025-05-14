@@ -18,25 +18,13 @@ schema_view = get_schema_view(
     openapi.Info(
         title="UniBazzar API",
         default_version='v1',
-        description="Complete API documentation for UniBazzar marketplace application",
-        terms_of_service="https://www.unibazzar.com/terms/",
-        contact=openapi.Contact(email="contact@unibazzar.com"),
+        description="API documentation for UniBazzar",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@unibazzar.local"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    authentication_classes=[],
-    patterns=[
-        path('admin/', admin.site.urls),
-        path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-        path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-        path('api/users/', include('users.urls')),
-
-        path('api/products/', include('products.urls')),
-        path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
-        path('accounts/', include('allauth.urls')),
-        path('api/auth-drf/', include('rest_framework.urls', namespace='rest_framework'))
-    ],
 )
 
 urlpatterns = [
@@ -47,8 +35,9 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
 
     # API Documentation (Swagger/Redoc)
-    path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('api/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     # Redirect '/swagger/' to '/api/docs/'
     path('swagger/', RedirectView.as_view(url='/api/docs/', permanent=True), name='swagger-redirect'),
@@ -63,6 +52,9 @@ urlpatterns = [
     # Products App Endpoints
     path('api/products/', include('products.urls')),
 
+    # Chatbot App Endpoints
+    path('api/chatbot/', include('chatbot.urls')),
+
     # Password Reset Endpoints (from django-rest-passwordreset)
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 
@@ -71,8 +63,14 @@ urlpatterns = [
 
     # DRF Login/Logout URLs (For Browsable API)
     path('api/auth-drf/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # dj-rest-auth URLs
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    # path('dj-rest-auth/google/', include('users.urls_social')), # Commented out due to ModuleNotFoundError
 ]
 
 # Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
