@@ -190,6 +190,7 @@ REST_AUTH = {
     'USER_DETAILS_SERIALIZER': 'users.serializers.UserProfileSerializer', # Corrected path
     'REGISTER_SERIALIZER': 'users.serializers.UserRegistrationSerializer', # Corrected to existing serializer
     'TOKEN_MODEL': None, # Explicitly tell dj_rest_auth not to use the default authtoken.Token model
+    'JWT_SERIALIZER': 'users.serializers.CustomJWTSerializer',  # Add this line
     # Add other dj_rest_auth settings as needed
 }
 
