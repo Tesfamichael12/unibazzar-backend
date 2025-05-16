@@ -5,6 +5,7 @@ from .views import (
     LogoutView, ResendVerificationEmailView, PasswordResetConfirmPageView,
     UniversityListView
 )
+from .views_profile import UserListingsView # Added
 
 app_name = 'users'
 
@@ -22,6 +23,9 @@ urlpatterns = [
 
     # University List
     path('universities/', UniversityListView.as_view(), name='university-list'),
+
+    # User Listings
+    path('<int:user_id>/listings/', UserListingsView.as_view(), name='user-all-listings'), # Added
 
     # Include profile-related URLs ( /me/, /me/avatar/, etc.)
     path('', include('users.urls_profile')),

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
@@ -47,87 +47,49 @@ class UserManager(BaseUserManager):
         
         return self._create_user(email, password, **extra_fields)
 
-class User(AbstractUser):
-    # Basic fields
-    full_name = models.CharField(_('full name'), max_length=255)
-    email = models.EmailField(_('email address'), unique=True)
-    
-    # Phone number (no validation)
-    phone_number = models.CharField(
-        max_length=17, 
-        blank=True, 
-        null=True,
-        verbose_name=_('phone number')
-    )
-    
-    # Profile picture
-    profile_picture = models.ImageField(
-        upload_to='profile_pictures/%Y/%m/',
-        blank=True,
-        null=True,
-        verbose_name=_('profile picture')
-    )
-    
-    # University and role
-    university = models.ForeignKey(
-        'University', 
-        on_delete=models.SET_NULL, 
-        null=True,
-        blank=True,
-        verbose_name=_('university')
-    )
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     
     ROLE_CHOICES = [
-        ('student', _('Student')),
-        ('merchant', _('Merchant')),
-        ('tutor', _('Tutor')),
-        ('service_provider', _('Service Provider')),
+        ('student', 'Student'),
+        ('tutor', 'Tutor'),
+        ('merchant', 'Merchant'),
+        ('campus_admin', 'Campus Admin'),
+        ('super_admin', 'Super Admin'),
     ]
-    role = models.CharField(
-        max_length=20, 
-        choices=ROLE_CHOICES,
-        verbose_name=_('role')
-    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
     
-    # Verification status
-    is_email_verified = models.BooleanField(
-        default=False,
-        verbose_name=_('email verified')
-    )
+    university = models.ForeignKey(University, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
     
-    # Additional fields
-    bio = models.TextField(blank=True, null=True, verbose_name=_('biography'))
-    date_of_birth = models.DateField(blank=True, null=True, verbose_name=_('date of birth'))
-    address = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('address'))
+    bio = models.TextField(blank=True, null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    # address = models.CharField(max_length=255, blank=True, null=True) # Removed
     
-    # Social media links
-    facebook = models.URLField(blank=True, null=True, verbose_name=_('Facebook'))
-    twitter = models.URLField(blank=True, null=True, verbose_name=_('Twitter'))
-    instagram = models.URLField(blank=True, null=True, verbose_name=_('Instagram'))
-    linkedin = models.URLField(blank=True, null=True, verbose_name=_('LinkedIn'))
+    # Social media links - Removed
+    # facebook = models.URLField(blank=True, null=True)
+    # twitter = models.URLField(blank=True, null=True)
+    # instagram = models.URLField(blank=True, null=True)
+    # linkedin = models.URLField(blank=True, null=True)
     
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False) # Required for Django admin
+    is_superuser = models.BooleanField(default=False) # Required for Django admin
+    is_email_verified = models.BooleanField(default=False)
     
-    # Set email as the USERNAME_FIELD and remove username from REQUIRED_FIELDS
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['full_name', 'role']
-    
-    # Use the custom manager
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now=True, null=True, blank=True)
+
     objects = UserManager()
-    
-    # Fix for removing the username field
-    username = None
-    
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-        ordering = ['-date_joined']
-    
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['full_name']
+
     def __str__(self):
         return self.email
-    
+
     def get_full_name(self):
         return self.full_name
     

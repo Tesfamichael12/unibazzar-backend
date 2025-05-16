@@ -10,10 +10,13 @@ from drf_yasg import openapi
 from .serializers import (
     UserProfileSerializer, UserProfileUpdateSerializer, ProfilePictureSerializer,
     EmailChangeSerializer, PhoneNumberUpdateSerializer, PasswordChangeSerializer,
-    StudentProfileSerializer, MerchantProfileSerializer, TutorProfileSerializer, CampusAdminProfileSerializer
+    StudentProfileSerializer, MerchantProfileSerializer, TutorProfileSerializer, CampusAdminProfileSerializer,
+    UserListingsSerializer
 )
 from .utils import send_verification_email
 from .models import StudentProfile, MerchantProfile, TutorProfile, CampusAdminProfile
+from products.models import StudentProduct, MerchantProduct, TutorService
+from products.serializers import StudentProductSerializer, MerchantProductSerializer, TutorServiceSerializer
 
 User = get_user_model()
 
@@ -183,6 +186,22 @@ class ProfilePictureUploadView(APIView):
             'status': 'error',
             'message': 'No profile picture to remove'
         }, status=status.HTTP_400_BAD_REQUEST)
+
+class UserListingsView(generics.RetrieveAPIView):
+    serializer_class = UserListingsSerializer
+    permission_classes = [permissions.AllowAny] # Or IsAuthenticated, depending on requirements
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        user = get_object_or_404(User, pk=user_id)
+        
+        # The UserListingsSerializer will fetch these based on the user instance
+        return user
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 class EmailChangeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
