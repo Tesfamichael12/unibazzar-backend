@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
 from .models import MerchantProduct, StudentProduct, TutorService, Review, Category
 from .serializers import (
     MerchantProductSerializer,
@@ -15,58 +16,62 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 class MerchantProductViewSet(viewsets.ModelViewSet):
     serializer_class = MerchantProductSerializer
-    permission_classes = []  # Allow any user (authenticated or not)
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [permissions.IsAuthenticated(), IsOwnerOrReadOnly()]
-        return []
+        return [permissions.IsAuthenticatedOrReadOnly()]
 
     def get_queryset(self):
         return MerchantProduct.objects.all().order_by('id')
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        user = self.request.user
+        university = getattr(user, 'university', None)
+        serializer.save(owner=user, nearest_university=str(university) if university else "")
 
 class StudentProductViewSet(viewsets.ModelViewSet):
     serializer_class = StudentProductSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [permissions.IsAuthenticated(), IsOwnerOrReadOnly()]
-        return []
+        return [permissions.IsAuthenticatedOrReadOnly()]
 
     def get_queryset(self):
         queryset = StudentProduct.objects.all().order_by('id')
         category_id = self.request.query_params.get('category')
         if category_id:
             queryset = queryset.filter(category_id=category_id)
-        queryset = queryset.filter(id__gte=231)
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        user = self.request.user
+        university = getattr(user, 'university', None)
+        serializer.save(owner=user, university=str(university) if university else "")
 
 class TutorServiceViewSet(viewsets.ModelViewSet):
     serializer_class = TutorServiceSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [permissions.IsAuthenticated(), IsOwnerOrReadOnly()]
-        return []
+        return [permissions.IsAuthenticatedOrReadOnly()]
 
     def get_queryset(self):
         queryset = TutorService.objects.all().order_by('id')
         category_id = self.request.query_params.get('category')
         if category_id:
             queryset = queryset.filter(category_id=category_id)
-        queryset = queryset.filter(id__gte=210)
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        user = self.request.user
+        university = getattr(user, 'university', None)
+        serializer.save(owner=user, university=str(university) if university else "")
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer

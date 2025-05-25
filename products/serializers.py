@@ -11,33 +11,36 @@ class MerchantProductSerializer(serializers.ModelSerializer):
     category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='category', write_only=True)
     nearest_university = serializers.CharField(read_only=True)
     phone_number = serializers.CharField()
+    condition = serializers.CharField(read_only=True)
 
     class Meta:
         model = MerchantProduct
         fields = '__all__'
-        read_only_fields = ['owner', 'nearest_university']
+        read_only_fields = ['owner', 'nearest_university', 'condition']
 
 class StudentProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='category', write_only=True)
     university = serializers.CharField(read_only=True)
     phone_number = serializers.CharField()
+    condition = serializers.CharField(read_only=True)
 
     class Meta:
         model = StudentProduct
         fields = '__all__'
-        read_only_fields = ['owner', 'university']
+        read_only_fields = ['owner', 'university', 'condition']
 
 class TutorServiceSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='category', write_only=True)
     university = serializers.CharField(read_only=True)
     phone_number = serializers.CharField()
+    condition = serializers.CharField(read_only=True)
 
     class Meta:
         model = TutorService
         fields = '__all__'
-        read_only_fields = ['owner', 'university']
+        read_only_fields = ['owner', 'university', 'condition']
 
 class ReviewSerializer(serializers.ModelSerializer):
     reviewer = serializers.PrimaryKeyRelatedField(read_only=True)
