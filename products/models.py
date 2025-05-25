@@ -12,6 +12,12 @@ class Category(models.Model):
         return self.name
 
 class MerchantProduct(models.Model):
+    CONDITION_CHOICES = [
+        ('new', 'New'),
+        ('used_like_new', 'Used - Like New'),
+        ('used_good', 'Used - Good'),
+        ('used_fair', 'Used - Fair'),
+    ]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='merchant_products')
     name = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='merchant_products/')
@@ -21,6 +27,7 @@ class MerchantProduct(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     nearest_university = models.CharField(max_length=255, blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
+    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, default='new')
 
     def save(self, *args, **kwargs):
         if self.owner and getattr(self.owner, 'university', None):
@@ -32,14 +39,15 @@ class MerchantProduct(models.Model):
 
 class StudentProduct(models.Model):
     CONDITION_CHOICES = [
-        ('used', 'Used'),
-        ('slightly used', 'Slightly Used'),
         ('new', 'New'),
+        ('used_like_new', 'Used - Like New'),
+        ('used_good', 'Used - Good'),
+        ('used_fair', 'Used - Fair'),
     ]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student_products')
     name = models.CharField(max_length=255)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, related_name='student_products')
-    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES)
+    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, default='new')
     photo = models.ImageField(upload_to='student_products/')
     description = models.TextField()
     tags = models.CharField(max_length=255, blank=True)
@@ -56,6 +64,12 @@ class StudentProduct(models.Model):
         return self.name
 
 class TutorService(models.Model):
+    CONDITION_CHOICES = [
+        ('new', 'New'),
+        ('used_like_new', 'Used - Like New'),
+        ('used_good', 'Used - Good'),
+        ('used_fair', 'Used - Fair'),
+    ]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tutor_services')
     banner_photo = models.ImageField(upload_to='tutor_services/')
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True, related_name='tutor_services')
@@ -63,6 +77,7 @@ class TutorService(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     university = models.CharField(max_length=255, blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
+    condition = models.CharField(max_length=20, choices=CONDITION_CHOICES, default='new')
 
     def save(self, *args, **kwargs):
         if self.owner and getattr(self.owner, 'university', None):
