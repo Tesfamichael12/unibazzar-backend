@@ -3,7 +3,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from decouple import config
 from datetime import timedelta
-# import dj_database_url # Only needed if you use dj_database_url for database config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -102,6 +102,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'unibazzar.wsgi.application'
 
 # Database
+# Default to SQLite if not configured for production
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -109,24 +110,20 @@ DATABASES = {
     }
 }
 
-# If you plan to use Supabase or another Postgres DB, configure it here or via DATABASE_URL
-# The following block is INTENTIONALLY COMMENTED OUT to force SQLite usage for now,
-# regardless of what is in the .env file for DATABASE_URL.
-#
-# DATABASE_URL_FROM_ENV = config('DATABASE_URL', default=None)
-# if DATABASE_URL_FROM_ENV:
-#     print(f"INFO: DATABASE_URL found: '{DATABASE_URL_FROM_ENV[:15]}...' (currently bypassed)")
-#     # try:
-#     #     import dj_database_url
-#     #     DATABASES['default'] = dj_database_url.parse(DATABASE_URL_FROM_ENV, conn_max_age=600)
-#     #     print("INFO: Successfully configured database using DATABASE_URL.")
-#     # except ValueError as e:
-#     #     print(f"WARNING: DATABASE_URL is set but invalid ('{DATABASE_URL_FROM_ENV}'). Error: {e}. Falling back to SQLite.")
-#     # except ImportError:
-#     #     print("WARNING: dj_database_url is not installed. DATABASE_URL will be ignored. Falling back to SQLite.")
-# else:
-#     # This branch would be hit if DATABASE_URL was not in .env at all
-#     print("INFO: DATABASE_URL not found in environment. Using default SQLite database.")
+# Use Supabase/Postgres in production if USE_SUPABASE is True
+if config('USE_SUPABASE', default=False, cast=bool):
+    database_url = config('DATABASE_URL', default=None)
+    if database_url:
+        DATABASES['default'] = dj_database_url.config(
+            default=database_url,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+        print("INFO: Configured to use Supabase PostgreSQL database.")
+    else:
+        print("WARNING: USE_SUPABASE is True, but DATABASE_URL is not set. Falling back to SQLite.")
+else:
+    print("INFO: USE_SUPABASE is False. Using default SQLite database.")
 
 
 AUTH_PASSWORD_VALIDATORS = [
