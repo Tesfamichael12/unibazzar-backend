@@ -42,6 +42,9 @@ urlpatterns = [
     # Redirect '/swagger/' to '/api/docs/'
     path('swagger/', RedirectView.as_view(url='/api/docs/', permanent=True), name='swagger-redirect'),
 
+    # Redirect /api/docs/ to /swagger/
+    path('api/docs/', RedirectView.as_view(url='/swagger/', permanent=True)),
+
     # SimpleJWT Token Authentication Endpoints (Refresh and Verify only)
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
