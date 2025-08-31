@@ -35,7 +35,7 @@ def send_verification_email(user, request):
         
         # Determine domain and scheme
         if settings.DEBUG:
-            domain = "localhost:8000"  # Always use localhost:8000 in debug mode
+            domain = "https://unibazzar-backend.onrender.com"  
             scheme = "http"
         else:
             domain = current_site.domain
@@ -43,8 +43,7 @@ def send_verification_email(user, request):
         
         # Create verification link
         if settings.DEBUG:
-            # Always use localhost:8000 in debug mode
-            verification_link = f"http://localhost:8000/api/users/verify-email/{uid}/{token}/"
+            verification_link = f"https://unibazzar-backend.onrender.com/api/users/verify-email/{uid}/{token}/"
         else:
             verification_link = f"{scheme}://{domain}/api/users/verify-email/{uid}/{token}/"
             
