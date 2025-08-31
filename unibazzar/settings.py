@@ -228,7 +228,7 @@ SIMPLE_JWT = {
 }
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS_STR = config('CORS_ALLOWED_ORIGINS', default="http://localhost:3000,http://127.0.0.1:3000")
+CORS_ALLOWED_ORIGINS_STR = config('CORS_ALLOWED_ORIGINS', default="https://unibazzar.vercel.app,http://localhost:3000,http://127.0.0.1:3000")
 CORS_ALLOWED_ORIGINS_LIST = CORS_ALLOWED_ORIGINS_STR.split(',')
 # Clean up escaped colons and remove trailing slashes
 CORS_ALLOWED_ORIGINS = [

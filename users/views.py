@@ -163,7 +163,7 @@ class EmailVerificationView(APIView):
             user.save()
             
             # Get the frontend login URL for the button
-            frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+            frontend_url = os.environ.get('FRONTEND_URL', 'https://unibazzar.vercel.app')
             login_url = f"{frontend_url}/login"
             
             # Render the success HTML template
@@ -175,7 +175,7 @@ class EmailVerificationView(APIView):
             return HttpResponse(html_content)
         
         # If verification failed, render the failure template
-        frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+        frontend_url = os.environ.get('FRONTEND_URL', 'https://unibazzar.vercel.app')
         login_url = f"{frontend_url}/login"
         resend_url = f"{frontend_url}/resend-verification"
         
