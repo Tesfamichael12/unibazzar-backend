@@ -6,6 +6,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.views.generic.base import RedirectView, TemplateView
+from .views import health_check
 
 # Import SimpleJWT views
 from rest_framework_simplejwt.views import (
@@ -33,6 +34,9 @@ urlpatterns = [
 
     # Home page
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
+
+    # Health checker endpoint
+    path('api/health/', health_check, name='health-check'),
 
     # API Documentation (Swagger/Redoc)
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
